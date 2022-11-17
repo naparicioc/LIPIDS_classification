@@ -36,13 +36,13 @@ def eval(model, device, loader, num_classes, args):
     prop_predictor3 = copy.deepcopy(model)
     print("------Copying model 4---------")
     prop_predictor4 = copy.deepcopy(model)
-    test_model_path = os.path.join(
-        args.save,'BINARY_'+args.target
+    test_model_path = os.path.join('/media/SSD5/pruiz/2022-2023/LIPIDS_classification/log/',
+        args.save
     )
-    test_model_path1 = test_model_path + "/Fold1/Best_Model.pth"
-    test_model_path2 = test_model_path + "/Fold2/Best_Model.pth"
-    test_model_path3 = test_model_path + "/Fold3/Best_Model.pth"
-    test_model_path4 = test_model_path + "/Fold4/Best_Model.pth"
+    test_model_path1 = test_model_path + "/Fold1/model_ckpt/Checkpoint_valid_best.pth"
+    test_model_path2 = test_model_path + "/Fold2/model_ckpt/Checkpoint_valid_best.pth"
+    test_model_path3 = test_model_path + "/Fold3/model_ckpt/Checkpoint_valid_best.pth"
+    test_model_path4 = test_model_path + "/Fold4/model_ckpt/Checkpoint_valid_best.pth"
     # LOAD MODELS
     print("------- Loading weights----------")
     prop_predictor1.load_state_dict(torch.load(test_model_path1)["model_state_dict"])
@@ -119,6 +119,7 @@ def main(target):
         args.target = target
 
     if args.use_gpu:
+        breakpoint()
         device = (
             torch.device("cuda:" + str(args.device))
             if torch.cuda.is_available()
@@ -193,31 +194,4 @@ def main(target):
 if __name__ == "__main__":
 
     args = ArgsInit().args
-    if args.target is None:
-            
-        targets = ['aa2ar', 'abl1', 'ace', 'aces', 'ada', 'ada17', 'adrb1', 'adrb2',
-        'akt1', 'akt2', 'aldr', 'ampc', 'andr', 'aofb', 'bace1', 'braf',
-        'cah2', 'casp3', 'cdk2', 'comt', 'cp2c9', 'cp3a4', 'csf1r',
-        'cxcr4', 'def', 'dhi1', 'dpp4', 'drd3', 'dyr', 'egfr', 'esr1',
-        'esr2', 'fa10', 'fa7', 'fabp4', 'fak1', 'fgfr1', 'fkb1a', 'fnta',
-        'fpps', 'gcr', 'glcm', 'gria2', 'grik1', 'hdac2', 'hdac8',
-        'hivint', 'hivpr', 'hivrt', 'hmdh', 'hs90a', 'hxk4', 'igf1r',
-        'inha', 'ital', 'jak2', 'kif11', 'kit', 'kith', 'kpcb', 'lck',
-        'lkha4', 'mapk2', 'mcr', 'met', 'mk01', 'mk10', 'mk14', 'mmp13',
-        'mp2k1', 'nos1', 'nram', 'pa2ga', 'parp1', 'pde5a', 'pgh1', 'pgh2',
-        'plk1', 'pnph', 'ppara', 'ppard', 'pparg', 'prgr', 'ptn1', 'pur2',
-        'pygm', 'pyrd', 'reni', 'rock1', 'rxra', 'sahh', 'src', 'tgfr1',
-        'thb', 'thrb', 'try1', 'tryb1', 'tysy', 'urok', 'vgfr2', 'wee1',
-        'xiap']
-        
-        results = {'Target': [], 'Mean_Test': []}
-        
-        for target in targets:
-            nap_result = main(target)
-            results['Target'].append(target)
-            results['Mean_Test'].append(nap_result)
-        
-        torch.save(results,os.path.join(args.save,'Overall_test_results.pth'))
-        print('Mean Test: {}'.format(np.mean(results['Mean_Test'])))
-    else:
-        main()
+    main(args.target)

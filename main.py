@@ -227,17 +227,21 @@ def train(
 
             else: #Change for the loss
                 pred = model(batch_mol)
-                class_loss = cls_criterion(
-                    F.softmax(pred[:, 1]).to(torch.float32),
-                    batch_mol.y.to(torch.float32),
-                )
+                if not args.binary:
+                    for i in range(0,num_classes):
+                        class_mask = batch.y.clone()
+                        class_mask[batch.y == i] = 1
+                        class_mask[batch.y != i] = 0
+                        class_loss = cls_criterion(F.sigmoid(pred[:,i]).to(torch.float32), class_mask.to(torch.float32))
+                        loss += class_loss
 
             loss += class_loss
 
             loss.backward()
             optimizer.step()
             loss_list.append(loss.item())
-        #scheduler.step()
+
+        scheduler.step()
 
     return np.mean(loss_list)
 
@@ -427,6 +431,7 @@ def main():
 
     # Set the optimizer and it's parameters
     optimizer = optim.Adamax(model.parameters(), lr=args.lr)
+    #scheduler=None
     scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma = 0.9)
 
     # Set dictionary that is used to save the best results on every epoch.
