@@ -119,7 +119,6 @@ def main(target):
         args.target = target
 
     if args.use_gpu:
-        breakpoint()
         device = (
             torch.device("cuda:" + str(args.device))
             if torch.cuda.is_available()
@@ -172,9 +171,7 @@ def main(target):
 
     fieldnames = list(save_items.keys())
 
-    csv_file = os.path.join(
-        args.save,'Performance.csv'
-    )
+    csv_file = os.path.join('log',args.save,'Performance.csv')
     if not os.path.exists(csv_file):
         create_header = True
     else:
