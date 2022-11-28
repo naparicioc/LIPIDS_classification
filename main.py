@@ -233,6 +233,7 @@ def train(
                         class_mask[batch.y == i] = 1
                         class_mask[batch.y != i] = 0
                         class_loss = cls_criterion(F.sigmoid(pred[:,i]).to(torch.float32), class_mask.to(torch.float32))
+                        #class_loss = cls_criterion(pred[:,i].to(torch.float32), class_mask.to(torch.float32))
                         loss += class_loss
 
             loss += class_loss
@@ -284,9 +285,13 @@ def eval_gcn(model, device, loader, num_classes, args):
                 loss = 0
                 #Poner softmax en BCE loss
                 class_loss = cls_criterion( 
-                    F.softmax(pred[:, 1]).to(torch.float32),
+                    F.sigmoid(pred[:, 1]).to(torch.float32),
                     batch_mol.y.to(torch.float32),
                 )
+                #class_loss = cls_criterion( 
+                #    pred[:, 1].to(torch.float32),
+                #    batch_mol.y.to(torch.float32),
+                #)
                 loss += class_loss
                 loss_list.append(loss.item())
                 pred = F.softmax(pred, dim=1) 
@@ -432,7 +437,8 @@ def main():
     # Set the optimizer and it's parameters
     optimizer = optim.Adamax(model.parameters(), lr=args.lr)
     #scheduler=None
-    scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma = 0.9)
+    #scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma = 0.1)
+    scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[5,15], gamma=0.9)
 
     # Set dictionary that is used to save the best results on every epoch.
     results = {

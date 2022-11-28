@@ -36,7 +36,7 @@ def eval(model, device, loader, num_classes, args):
     prop_predictor3 = copy.deepcopy(model)
     print("------Copying model 4---------")
     prop_predictor4 = copy.deepcopy(model)
-    test_model_path = os.path.join('/media/SSD5/pruiz/2022-2023/LIPIDS_classification/log/',
+    test_model_path = os.path.join('/media/SSD6/naparicioc/LIPIDS_classification/log/LM/',
         args.save
     )
     test_model_path1 = test_model_path + "/Fold1/model_ckpt/Checkpoint_valid_best.pth"
@@ -171,7 +171,8 @@ def main(target):
 
     fieldnames = list(save_items.keys())
 
-    csv_file = os.path.join('log',args.save,'Performance.csv')
+    csv_file = os.path.join('log/LM',args.save,'Performance.csv')
+
     if not os.path.exists(csv_file):
         create_header = True
     else:

@@ -317,9 +317,9 @@ def plot_nap(train_nap, val_nap, save_dir,
     ax.set_ylim(min(np.min(train_nap),np.min(val_nap)),max(np.max(train_nap),np.max(val_nap))*1.1)
     plt.xlabel('Epoch {0}'.format(num_epoch))
     plt.ylabel('NAP values')
-    plt.plot(train_nap, label='Train')
-    plt.plot(val_nap, label='Validation')
-    plt.legend()
+    plt.plot(train_nap, label='Train', color='forestgreen')
+    plt.plot(val_nap, label='Validation', color='indianred')
+    plt.legend(loc = 'best', facecolor="white", edgecolor='black')
     
     # Save figure
     if save:
@@ -338,11 +338,12 @@ def plot_loss(train_losses, val_losses, save_dir,
     fig, ax = plt.subplots()
     ax.set_xlim(0,num_epoch)
     ax.set_ylim(min(np.min(train_losses),np.min(val_losses)),max(np.max(val_losses),np.max(train_losses))*1.1)
+    plt.style.use('ggplot')
     plt.xlabel('Epoch')
     plt.ylabel('Loss values')
-    plt.plot(train_losses, label='Train')
-    plt.plot(val_losses, label='Validation')
-    plt.legend()
+    plt.plot(train_losses, label='Train', color='forestgreen')
+    plt.plot(val_losses, label='Validation', color='indianred')
+    plt.legend(loc = 'best', facecolor="white", edgecolor='black')
     
     # Save figure
     if save:
